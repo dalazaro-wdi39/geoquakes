@@ -1,42 +1,77 @@
 // define globals
-var quakesLink = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson';
-
 console.log('sanity check');
 
+//define endpoint
+var dailyQuakes = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson';
 
-$(document).ready(function () {
-  console.log("Let's get coding!");
+//define map
+var map;
 
-  $.ajax({
-    method: 'GET',
-    url: quakesLink,
-    dataType: 'json',
-    success: onSuccess
-  });
 
-  function onSuccess (dataResponse) {
-    for (i = 0; i <= 25; i++) {
-      $('.earthquakeData').append(`<li>${dataResponse.features[i].properties.title}</li>`)
-    }
-  }
+//when info is gathered
+$(document).ready(function() {
+
+  //callback for listing quake data/markers
+  listQuakeData();
 
 });
 
-// Google Map
-$('#map').append(`initMap`);
 
-function initMap () {
-  var myLatLng = {lat: 37.791, lng: -122.401};
+//function for gathering quake locations and marker settings
+function listQuakeData(dataResponse) {
 
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: myLatLng,
-    zoom: 2
+  $.ajax({
+
+    method: 'GET',
+    url: dailyQuakes,
+    dataType: 'json',
+    success: function(dataResponse){
+
+      // console.log(dataResponse);
+
+      //defining unnamed Object as variable
+      var earthquakes = dataResponse;
+
+      //for each location, create a list item and marker
+      earthquakes.features.forEach(function listAndMarker(quake) {
+
+        //List item of earthquake info
+        var title = quake.properties.title;
+        var hoursAgo = Math.round((Date.now() - quake.properties.time) / 3600000);
+        $('.earthquakeData').append(`<li>${hoursAgo} hours ago | ${title}</li>`);
+
+        //Create Marker
+        var lat = quake.geometry.coordinates[1];
+        var lng = quake.geometry.coordinates[0];
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat,lng),
+          map: map,
+          title: title
+        });
+
+      });
+
+    }
+
   });
 
-  var marker = new google.maps.Marker({
-    position: {lat: 37.791, lng: -122.401},
-    map: map,
-    title: 'Home'
-  });
+};
 
+//function for creating map
+function createMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {
+      lat: 37.78,
+      lng: -122.44
+    },
+    zoom: 3
+  });
+  // var homeMarker = new google.maps.Marker({
+  //   position: {
+  //     lat: 37.78,
+  //     lng: -122.44
+  //   },
+  //   map: map,
+  //   title: "San Francisco (no earthquake)"
+  // });
 };

@@ -16,7 +16,7 @@
   <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
 
   <!-- Google Maps API -->
-  <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHLett8djBo62dDXj0EjCimF8Rd6E8cxg&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHLett8djBo62dDXj0EjCimF8Rd6E8cxg&callback=createMap"></script>
 
   <!-- Custom JS -->
   <script src="scripts/app.js"></script>
@@ -32,9 +32,9 @@
       </div>
       <div class="col-md-6">
         <div id="info">
-          <h1>Earthquakes from the past <span class="timeline">day</span>:</h1>
-          <ul class="earthquakeData">
-          </ul>
+          <h1>Significant earthquakes from the past day:</h1>
+          <ol class="earthquakeData">
+          </ol>
         </div>
       </div>
     </div>
